@@ -1,4 +1,4 @@
-function [ xfinal ] = dichotomic2_func( a , b , tol , iterMax)
+function [ xfinal, nbIter , err ] = dichotomic2_func( a , b , tol , iterMax, trueValue)
     % Fonction de trichotomie qui execute l'algorithme de trichotomie sur
     % l'intervalle [a,b] pour trouver la racine presente dans cet intervalle
     %
@@ -12,11 +12,11 @@ function [ xfinal ] = dichotomic2_func( a , b , tol , iterMax)
     % => xfinal = Float = L'approximation de notre racine
 
     % Initialisation
-    i = 0;
+    nbIter = 0;
 
     % Boucle de la trichotomie
-    while i <= iterMax && (b-a)/3 >= tol
-        i = i + 1;
+    while nbIter <= iterMax && (b-a)/3 >= tol
+        nbIter = nbIter + 1;
         c1 = a + (b - a)/3;
         c2 = a + (b - a)*2/3;
         f_c1 = func(c1);
@@ -32,16 +32,7 @@ function [ xfinal ] = dichotomic2_func( a , b , tol , iterMax)
         end
     end
 
-    % Identification du critere d'arret implique
-    if (b-a)/3 < tol
-        disp('tol atteinte');
-    elseif i > iterMax
-        disp('iterMax atteinte');
-    elseif c1 == 0 | c2 == 0
-        disp('valeur exacte atteinte');
-        return
-    end
-
     % Approximation de notre racine
     xfinal = (a+b)/2;
+    err = abs(trueValue - xfinal);
 end
