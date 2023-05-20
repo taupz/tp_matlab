@@ -1,0 +1,22 @@
+-----------------------------------------------------
+Pseudocode méthode de la dichotomie :
+
+Input : fun, a, b, tol, iterMax, trueValue
+Output: approximation de c, nombre d'itérations, erreur relative
+
+Step 1 : set i ← 1
+Step 2 : TANT QUE i ≤ iterMax ET |b − a| > tol FAIRE
+Step 3 :    set i ← i + 1
+Step 4 :    set c ← (a + b)/2
+Step 5 :    set fc ← fun(c)
+Step 6 :    SI fc = 0
+Step 7 :        EXIT
+Step 8 :    FIN SI
+Step 9 :    SI fun(a) ∗ fc < 0
+Step 10 :       set b ← c
+Step 11 :   SINON
+Step 12 :       set a ← c
+Step 13 :   FIN SI
+Step 14 : FIN TANT QUE
+Step 15 : set xfinal ← c
+Step 16 : set err ← |xfinal − trueValue|
