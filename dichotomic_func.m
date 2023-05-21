@@ -17,7 +17,7 @@ function [ xfinal, nbIter , err ] = dichotomic_func( fun , a , b , tol , iterMax
 
     % Initialisation
     nbIter = 0;
-
+    err = zeros([1, iterMax]);
     % Boucle de la dichotomie
     while nbIter < iterMax && abs(b-a) > tol
         nbIter = nbIter + 1;
@@ -25,9 +25,13 @@ function [ xfinal, nbIter , err ] = dichotomic_func( fun , a , b , tol , iterMax
 
         f_c = fun(c);
 
+        % Condition d'arret
         if f_c == 0
             break
         end
+
+        % Calcul de l'erreur à chaque itération
+        err(nbIter+1) = abs(trueValue - c);
 
         if fun(a)*f_c < 0
             b = c;
@@ -38,5 +42,4 @@ function [ xfinal, nbIter , err ] = dichotomic_func( fun , a , b , tol , iterMax
 
     % Approximation de notre racine
     xfinal = c;
-    err = abs(trueValue - xfinal);
 end

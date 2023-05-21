@@ -1,4 +1,4 @@
-function [ xfinal, nbIter , err ] = dichotomic2_func( f , a , b , tol , iterMax, trueValue)
+function [ xfinal, nbIter , err] = dichotomic2_func( f , a , b , tol , iterMax, trueValue)
     % Fonction de trichotomie qui execute l'algorithme de trichotomie sur
     % l'intervalle [a,b] pour trouver la racine presente dans cet intervalle
     %
@@ -17,6 +17,7 @@ function [ xfinal, nbIter , err ] = dichotomic2_func( f , a , b , tol , iterMax,
 
     % Initialisation
     nbIter = 0;
+    err = zeros([1, iterMax]);
 
     % Boucle de la trichotomie
     while nbIter < iterMax && abs(b-a) >= tol
@@ -26,6 +27,7 @@ function [ xfinal, nbIter , err ] = dichotomic2_func( f , a , b , tol , iterMax,
         f_c1 = f(c1);
         f_c2 = f(c2);
 
+        % Condition d'arret
         if f_c1 == 0
             xfinal = c1;
             err = 0;
@@ -35,6 +37,9 @@ function [ xfinal, nbIter , err ] = dichotomic2_func( f , a , b , tol , iterMax,
             err = 0;
             return
         end
+
+        % Calcul de l'erreur à chaque itération
+        err(nbIter+1) = abs(trueValue - (a+b)/2);
 
         if f(a)*f_c1 <= 0
             b = c1;
@@ -48,5 +53,4 @@ function [ xfinal, nbIter , err ] = dichotomic2_func( f , a , b , tol , iterMax,
 
     % Approximation de notre racine
     xfinal = (a+b)/2;
-    err = abs(trueValue - xfinal);
 end
