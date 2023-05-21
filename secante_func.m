@@ -17,9 +17,9 @@ function[xfinal,nbIter,err]=secante_func(fun, a, b, iterMax, tol, trueValue)
     x0 = a;
     x1 = b;
 
-    while nbIter < iterMax && abs(fun(x1)) > tol
+    while nbIter < iterMax && abs(x1-x0) > tol
         nbIter = nbIter + 1;
-        x2 = (x0*fun(x1) - x1*fun(x0))/(fun(x1) - fun(x0));
+        x2 = x1 - fun(x1)*(x1 - x0)/(fun(x1) - fun(x0));
 
         x0 = x1;
         x1 = x2;

@@ -15,7 +15,7 @@ function[xfinal,nbIter,err]=newton_func(fun, deriv, p0, iterMax, tol, trueValue)
     % => err = [Float] = Valeur de l'erreur entre l'element calculee et la veritable valeur
     nbIter = 0;
     x = p0;
-    while nbIter < iterMax && abs(fun(x)) >= tol
+    while nbIter < iterMax && abs(fun(x)) > tol
         nbIter = nbIter + 1;
         x = x - fun(x)/deriv(x);
     end

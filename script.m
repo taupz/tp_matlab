@@ -54,12 +54,12 @@ disp(['Temps moyen sur 100 executions : ' num2str(averageTimeTrichotomie) 's' ch
 
 
 % -------------------- Methode du point fixe -------------------- %
-trueValue1 = 0.795942;
+trueValue1 = trueValue;
 f1 = @(x) x^4 + 2*x^2 - x - 3;
 g1 = @(x) (3 + x - 2*x^2)^(1/4);
 
-f1 = @(x) 3*x^5 + x^2 - 2*x;
-g1 = @(x) (-(1/3)*x^2  + (2/3)*x)^(1/5);
+f1 = @(x) x^3 + 4*x^2 - 10;
+g1 = @(x) (-4*x^2  + 10)^(1/3);
 
 [fixedPointValue, nbIterFixedPoint, errFixedPoint] = fixedPoint_func(g1, 1, 100, 10^-3, trueValue1);
 
