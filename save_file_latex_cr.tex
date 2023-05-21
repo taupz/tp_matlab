@@ -158,7 +158,7 @@
 \section{Méthodes et matériels}
 \noindent Dans cette section, nous présenterons les méthodes étudiées et leur mise en oeuvre sous forme d'algorithme en pseudo-code. Vous retrouverez les fonctions codées en langage \href{https://www.mathworks.com/products/matlab.html}{MATLAB} dans le fichier .zip fourni avec ce compte-rendu, ou bien en suivant \href{https://github.com/taupz/tp_matlab}{\underline{ce lien}} si vous n'avez pas accès au dossier.\\
 
-\noindent Chaque fonction présentée prend en paramètres les informations nécessaires à la méthode qu'elle implémente et un handle \texttt{fun} représentant la fonction dont on cherche la racine. Cela permet de tester les algoritmes pour différentes fonctions. Elles renverront la valeur approchée du zéro qu'elles ont obtenu, le nombre d'itérations nécessaires pour l'atteindre et l'erreur par rapport au zéro réel de fonction (calculé soit à la main, soit avec \texttt{roots}, une méthode native de matlab renvoyant les racines d'un polynôme). \\
+\noindent Chaque fonction présentée prend en paramètres les informations nécessaires à la méthode qu'elle implémente et un handle \texttt{fun} représentant la fonction dont on cherche la racine. Cela permet de tester les algorithmes pour différentes fonctions. Elles renverront la valeur approchée du zéro qu'elles ont obtenu, le nombre d'itérations nécessaires pour l'atteindre et l'erreur par rapport au zéro réel de fonction (calculé soit à la main, soit avec \texttt{roots}, une méthode native de MATLAB renvoyant les racines d'un polynôme). \\
 \noindent Afin de les étudier, nous récupérerons les informations (valeur approchée, nombre d'itérations, erreur relative et temps d'exécution moyen sur 100 exécutions) de chaque méthode de la façon suivante (codée en MATLAB) :\\
 
 \begin{lstlisting}[caption={Récupération des données d'une méthode}]
@@ -186,8 +186,8 @@ Une fois ces données récupérées, nous pourrons les comparer et les analyser 
 % ===== Dichotomie =====
 \subsection{Méthode de la dichotomie}
 \label{ref:dichotomie}
-\noindent La méthode de la dichotomie est un algorithme de recherche d'un zéro d'une fonction. Elle implique de diviser successivement un intervalle en deux sous-intervalles et en conservant le sous-intervalle contenant la racine de la fonction. Après un certain nombre de division, l'algorithme converge vers le zéro exacte de la fonction.\\
-Pour implémenter notre algorithme, nous considérerons une fonction $f$ continue sur $[a,b]$ telle que $f(a)$ et $f(b)$ sont de signe opposés et non nuls. D'après le théorème des valeurs intermédiaires, il existe un point $c$ tel que $f(x) = 0$, qui correspond à notre racine. À chaque itération, nous allons considérer le milieu $c$ de l'intervalle $[a,b]$ comme une approximation du zéro de la fonction, puis déterminer si le zéro est dans $[a,c]$ ou dans $[c,b]$ pour réitérer la recherche dans ce nouvel intervalle contenant le zéro.\\
+\noindent La méthode de la dichotomie est un algorithme de recherche d'un zéro d'une fonction. Elle implique de diviser successivement un intervalle en deux sous-intervalles et de conserver le sous-intervalle contenant la racine de la fonction. Après un certain nombre de divisions, l'algorithme converge vers le zéro exact de la fonction.\\
+Pour implémenter notre algorithme, nous considérerons une fonction $f$ continue sur $[a,b]$ telle que $f(a)$ et $f(b)$ sont de signes opposés et non nuls. D'après le théorème des valeurs intermédiaires, il existe un point $c$ tel que $f(x) = 0$, qui correspond à notre racine. À chaque itération, nous allons considérer le milieu $c$ de l'intervalle $[a,b]$ comme une approximation du zéro de la fonction, puis déterminer si le zéro est dans $[a,c]$ ou dans $[c,b]$ pour réitérer la recherche dans ce nouvel intervalle contenant le zéro.\\
 Ainsi, on peut écrire l'algorithme de dichotomie selon ce pseudo-code :
 \begin{verbatim}
 Entrée : fun, a, b, tol, iterMax, trueValue
@@ -428,9 +428,9 @@ Nous pouvons donc en conclure que l'algorithme converge bien vers une approximat
         \hline
         \textbf{Méthode} & \textbf{Résultat} & \textbf{Nb Itérations} & \textbf{Vitesse moyenne} & \textbf{Puissance erreur} \\
         \hline
-        \textbf{Dichotomie} & $1,3654$ & 13 & $0,324$ ms & $10^{-4}$ \\
+        \textbf{Dichotomie} & $1,3654$ & 13 & $0,280$ ms & $10^{-4}$ \\
         \hline
-        \textbf{Trichotomie} & $1,3653$ & 8 & $0,285$ ms & $10^{-5}$ \\
+        \textbf{Trichotomie} & $1,3653$ & 8 & $0,385$ ms & $10^{-5}$ \\
         \hline
         \textbf{Point fixe} & $1,3654$ & 10 & $0,439$ ms & $10^{-4}$ \\
         \hline
@@ -446,8 +446,16 @@ Nous pouvons donc en conclure que l'algorithme converge bien vers une approximat
     \label{tab:tableau}
 \end{table}
 \noindent Ce tableau nous permet d'observer que la méthode nécessitant le moins d'itérations pour converger est la méthode de Newton. Toutefois, elle n'offre pas la meilleure précision puisque la méthode de la sécante approche la fonction à $10^{-7}$ près.\\
-La comparaison entre les méthodes de dichotomie et trichotomie (basées sur le même fonctionnement) montre que la trichotomie est plus rapide à converger et plus précise.\\
-La méthode qui semble la moins efficace est la méthode de la fausse position avec ses 33 itérations.
+La comparaison entre les méthodes de dichotomie et trichotomie (basées sur le même fonctionnement) montre que la trichotomie est plus rapide à converger et plus précise. En revanche, elle est plus lente au niveau du temps d'exécution.\\
+La méthode qui semble la moins efficace est la méthode de la fausse position avec ses 33 itérations.\\
+On représente l'ensemble des erreurs que nous avons obtenu pour chaque technique sur une échelle logarithmique sur cette figure :
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{graph.png}
+    \caption{Erreur pour chaque méthode en fonction de l'itération}
+    \label{fig1}
+\end{figure}
+\noindent Cette figure représente bien les résultats énoncés dans le tableau.
 
 
 
@@ -455,13 +463,47 @@ La méthode qui semble la moins efficace est la méthode de la fausse position a
 % Discussions ---------------------------------------------------
 \section{Discussions}
 \label{ref:discussions}
-\subsection{Autour de la trichotomie}
+\noindent Tout d'abord, toutes les méthodes de calcul de zéro que nous avons codées en MATLAB convergent bien vers le zéro de la fonction $f$ considérée. De plus, les temps nécessaires pour s'approcher très près ce zéro sont infimes, de l'ordre du dixième de millisecondes pour toutes les fonctions. Ainsi, elles sont toutes rapides et fonctionnelles pour approcher la racine d'une fonction. Cependant, toutes n'ont pas la même efficacité, et c'est ce dont nous allons discuter.
 \subsection{Comparaison des méthodes}
+\noindent Pour rappel, les données rapportées dans la partie \hyperref[ref:resultats]{Résultats} se font pour une fonction précise et dans des conditions particulières. Afin de comparer en profondeur les algorithmes, nous allons faire varier ces conditions pour observer leurs comportements.\\
+En analysant les données du tableau \ref{table1}, on ne peut être sur de savoir quelle est la "meilleure" méthode, c'est-à-dire celle approchant le zéro le plus précisément possible et le plus rapidement possible. Nous allons donc aborder le problème avec l'objectif d'approcher le zéro le plus précisément possible.\\
+Pour déterminer celle qui approche le plus vite le zéro, nous fixerons une tolérance très basse et observerons le nombre d'itérations nécessaires à atteindre le zéro exact. On regroupe ces données dans ce tableau :
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Méthode} & \textbf{Nombre d'itérations} \\
+\hline
+Dichotomie & 54\\
+Trichotomie & 35\\
+Point fixe & 53\\
+Newton & 7\\
+Sécante & 13\\
+Fausse position & +100\\
+\hline
+\end{tabular}
+\caption{Nombre d'itérations pour atteindre le zéro exact}
+\label{tab:iterations}
+\end{table}
+\noindent On voit que la méthode de Newton est la plus efficace pour ce genre de problème, puisqu'elle atteint le zéro exact en seulement 7 itérations. La moins efficace est celle de la fausse position qui dépasse les 100 itérations.\\
 
+\noindent Ainsi, la méthode de Newton semble la plus efficace pour calculer le zéro d'une fonction non linéaire. Toutefois, elle présente des inconvénients. En effet, $f$ doit être régulière car la convergence vers la racine n'est pas assurée. De plus, elle nécessite que $f$ soit dérivable (car la méthode fait intervenir $f'(x)$). De la même façon, les méthodes de la sécante et de la fausse position, qui dépendent elles aussi de leur dérivée, présentent cet inconvénient.\\
+
+\noindent La méthode du point fixe elle est encore plus limitée. En effet, pour trouver la racine d'une fonction $f$, il est nécessaire de connaître une fonction $g$ associée dont on doit chercher le point fixe. Il serait possible d'implémenter une fonctionnalité déterminant cette fonction $g$ automatiquement, mais cela serait très complexe et nécessiterait des packages non natifs.\\
+
+\noindent La dichotomie et la trichotomie, dont nous discuterons en détail dans la partie suivante offrent une méthode efficace et sûre puisqu'elle ne dépend que du fait que le zéro se trouve dans l'intervalle considéré au début. Même si elles ne sont pas les plus rapides ou celles qui convergent le plus vite, elles sont "solides" dans leur fonctionnement.
+
+\subsection{Autour de la trichotomie et de la dichotomie}
+\noindent La dichotomie et la trichotomie suivent un fonctionnement similaire. Elle dépendent toutes les deux d'un intervalle initial $[a,b]$ qui sera divisé successivement. La différence se situe dans la division. La dichotomie fait intervenir une division par 2 et la trichotomie par 3. Nous pouvons donc nous interroger sur laquelle des deux est la plus rapide à converger.\\
+
+\noindent Les valeurs citées dans le Tableau \ref{table1} semblent montrer que la trichotomie est plus efficace que la dichotomie. Au niveau du temps d'exécution toutefois, en moyenne la dichotomie est plus rapide que la trichotomie. Cela est du au fait que la trichotomie fait intervenir plus de calculs que la dichotomie en redéfinissant selon 4 bornes au lieu de 3.\\
+Ainsi, la vitesse de convergence de la trichotomie "itérations par secondes" est inférieure à celle de la dichotomie. Dans le cas considéré, elle est de $\frac{8}{385.10^{-4}} = 207$ itérations par seconde pour la trichotomie, et $\frac{13}{280.10^{-4}} = 464$ itérations par seconde pour la dichotomie.  La dichotomie convergera beaucoup plus de deux fois plus vite que la dichotomie. Ainsi, cela peut poser problème sur des très grand intervalles nécessitant de nombreuses itérations, puisque la trichotomie prendre un temps sensiblement plus long que la dichotomie.
 
 % Conclusion ---------------------------------------------------
 \section{Conclusion}
+\noindent En conclusion, nous avons exploré différentes méthodes algorithmiques de recherche de zéro, puis comparé leur rapidité et leur précision. Nous avons montré que, même si elles étaient toutes fonctionnelles, la méthode de Newton était la plus efficace dans le cas de la recherche d'une fonction dérivable et stable. La méthode de la sécante offre également une convergence rapide, mais dépend aussi de sa dérivabilité. La méthode du point fixe est aussi relativement efficace, mais dépend d'une fonction annexe fastidieuse à déterminer. La dichotomie et la trichotomie offrent des solutions stables et efficaces même si elles ne sont pas les plus rapides. Enfin, la méthode de la fausse position a montrée des résultats similaires mais de façon plus lente et moins stable.\\
 
+\noindent Ainsi, les méthodes étudiées permettent d'obtenir une approximation du zéro d'une fonction non-linéaire dont il serait difficile de calculer les racines de façon analytique. Elles offrent des solutions différentes mais complémentaires à ce type de problème.
 
 
 % Page X Références -------------------------------------------------------
@@ -473,6 +515,12 @@ La méthode qui semble la moins efficace est la méthode de la fausse position a
     \item \textbf{Source 2:} Point fixe. (2023, avril 13). Dans \textit{Wikipédia}. Récupéré le 18 mai 2023, de \url{https://fr.wikipedia.org/wiki/Point_fixe}
     
     \item \textbf{Source 3:} Albera, L. (2023). Module de mathématiques CUPGE1 ESIR.
+
+    \item \textbf{Source 4:} Lemonnier, F. (2015, 7 juin). \textit{Méthode de Newton} [PDF]. Récupéré de \url{https://perso.eleves.ens-rennes.fr/~lgay/Agregation/Me%CC%81thode%20de%20Newton.pdf}
+
+    \item \textbf{Source 5:} Bodin, A., Borne, N. Desideri, L. (2015). \textit{Zéros des fonctions}. Récupéré de \url{http://exo7.emath.fr/cours/ch_zeros.pdf}
+
+    \item \textbf{Source 6:} Méthode de la fausse position. (2023, janvier 24). Dans \textit{Wikipédia}. Récupéré le 18 mai 2023, de \url{https://fr.wikipedia.org/wiki/M%C3%A9thode_de_la_fausse_position}
 \end{itemize}
 
 \end{document}
