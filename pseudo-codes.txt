@@ -1,22 +1,76 @@
 -----------------------------------------------------
 Pseudocode méthode de la dichotomie :
 
-Input : fun, a, b, tol, iterMax, trueValue
-Output: approximation de c, nombre d'itérations, erreur relative
-
-Step 1 : set i ← 1
-Step 2 : TANT QUE i ≤ iterMax ET |b − a| > tol FAIRE
-Step 3 :    set i ← i + 1
-Step 4 :    set c ← (a + b)/2
-Step 5 :    set fc ← fun(c)
+Entrée : fun, a, b, tol, iterMax, trueValue
+Sortie: approximation de la racine, nombre d'itérations, erreur relative
+Step 1 : i ← 1
+Step 2 : TANT QUE i < iterMax ET |b - a| > tol FAIRE
+Step 3 :    i ← i + 1
+Step 4 :    c ← (a + b)/2
+Step 5 :    fc ← fun(c)
 Step 6 :    SI fc = 0
-Step 7 :        EXIT
+Step 7 :        BREAK
 Step 8 :    FIN SI
-Step 9 :    SI fun(a) ∗ fc < 0
-Step 10 :       set b ← c
+Step 9 :    SI fun(a) * fc < 0
+Step 10 :       b ← c
 Step 11 :   SINON
-Step 12 :       set a ← c
+Step 12 :       a ← c
 Step 13 :   FIN SI
 Step 14 : FIN TANT QUE
-Step 15 : set xfinal ← c
-Step 16 : set err ← |xfinal − trueValue|
+Step 15 : xfinal ← c
+Step 16 : err ← |xfinal - trueValue|
+
+-----------------------------------------------------
+Pseudocode méthode de la trichotomie :
+
+Entrée : fun, a, b, tol, iterMax, trueValue
+Sortie: approximation de la racine, nombre d'itérations, erreur relative
+Step 1 : i ← 1
+Step 2 : TANT QUE i < iterMax ET |b - a| > tol FAIRE
+Step 3 :    i ← i + 1
+Step 4 :    c1 ← (a + b)/3
+Step 5 :    c2 ← 2*(a + b)/3
+Step 6 :    fc1 ← fun(c1)
+Step 7 :    fc2 ← fun(c2)
+Step 8 :    SI fc1 = 0
+Step 9 :        xfinal ← c1
+Step 10 :       err = 0
+Step 11 :       EXIT
+Step 12 :   SINON SI fc2 = 0
+Step 13 :       xfinal ← c2
+Step 14 :       err = 0
+Step 15 :       EXIT
+Step 16 :   FIN SI
+Step 17 :   SI fun(a) * fc1 < 0
+Step 18 :       b ← c1
+Step 19 :   SINON SI fun(a) * fc2 < 0
+Step 20 :       a ← c1
+Step 21 :       b ← c2
+Step 22 :   SINON
+Step 23 :       a ← c2
+Step 24 :   FIN SI
+Step 25 : FIN TANT QUE
+Step 26 : xfinal ← (a + b)/2
+Step 27 : err ← |xfinal - trueValue|
+
+
+-----------------------------------------------------
+Pseudocode méthode du point fixe :
+
+Entrée : fun, p0, tol, iterMax, trueValue
+Sortie: approximation de la racine, nombre d'itérations, erreur relative
+Step 1 : i ← 1
+Step 2 : x ← p0
+Step 3 : TANT QUE i < iterMax FAIRE
+Step 4 :    newX ← fun(x)
+Step 5 :    SI |newX - x| < tol
+Step 6 :        BREAK
+Step 7 :    FIN SI
+Step 8 :    i ← i + 1
+Step 9 :    x ← newX
+Step 10 : FIN TANT QUE
+Step 11 : xfinal ← x
+Step 12 : err ← |xfinal - trueValue|
+
+-----------------------------------------------------
+Pseudocode méthode de Newton :

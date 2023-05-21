@@ -1,0 +1,356 @@
+% Compte rendu TP : Résolution d'équations non linéaires
+% ESIR - Université de Rennes
+% CUPGE1 - MATH-S2
+%
+% Auteurs :
+% - Balthazar GIROT
+% - Romain COURAUD
+
+% Packages ------------------------------------------------------------------
+\documentclass[12pt]{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[switch, modulo]{lineno}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage[euler]{textgreek}
+\usepackage{siunitx}
+\usepackage[font=scriptsize]{caption}
+\usepackage{multicol}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{calc}
+\usepackage{setspace}
+\usepackage{fancyvrb}
+
+\hypersetup{    % Remove default hyperlink style
+    pdfborder=0 0 0,
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+\lstset{
+    language=Matlab,
+    basicstyle=\ttfamily,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+}
+
+\renewcommand{\lstlistingname}{Code}
+
+
+\lstset{    % Code snippet settings
+    language=R,
+    basicstyle=\scriptsize\ttfamily,
+    commentstyle=\ttfamily\color{red},
+    numbers=left,
+    numberstyle=\ttfamily\color{blue}\footnotesize,
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    title=\lstname,
+    escapeinside={},
+    keywordstyle={},
+    morekeywords={}
+    }
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\title{Compte rendu TP MATH-S2}
+
+% Document ------------------------------------------------------------------
+\begin{document}
+\pagestyle{plain}
+
+
+% Page 1 ------------------------------------------------------------------
+\newgeometry{left=2.5cm, right=2.5cm, top=3.5cm, bottom=2.5cm}
+\begin{titlepage}
+\begin{center}
+
+\textsc{\LARGE Université de Rennes - ESIR}\\[1cm]
+% side by side logos
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2.2cm, keepaspectratio]{logo-univ-de-rennes.png}
+\end{minipage}\hfill
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2.2cm, keepaspectratio]{logo-esir.png}
+\end{minipage}\\[3cm]
+
+\textsc{\Large Module MATH-S2 : Mathématiques}\\[0.5cm]
+\textsc{\large CUPGE1 2022/2023 - Groupe 2}\\[1cm]
+
+\HRule\\[0.4cm]
+{\huge \textbf{Compte rendu de TP : Résolution d'équations non linéaires}}\\[0.15cm]
+\HRule\\[3cm]
+
+
+{\large \emph{Auteurs:}\\
+- Romain \textsc{COURAUD}\\
+- Balthazar \textsc{GIROT}}
+
+\vfill
+21 mai 2023
+\end{center}
+\end{titlepage}
+\restoregeometry
+\newgeometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+
+% Page 2 ------------------------------------------------------------------
+\newpage
+\thispagestyle{empty}
+\setcounter{page}{0}
+
+\tableofcontents
+
+\vfill
+\noindent
+\textbf{Nous attestons sur l'honneur que le contenu de ce document est original et est issu de nos réflexions personnelles.} Toutes les sources d'informations utilisées et les citations aux auteurs on été mentionnées conformément aux usages en vigueur et répertoriées dans la partie \hyperref[ref:Références]{"Références"}.
+
+% Intro -----------------------------------------------------------------
+\newpage
+
+\section{Introduction}
+\noindent L'objectif de ce TP de Mathématiques était, dans un premier temps de trouver la racine du polynôme $P(x) = x^3 + 4x^2 -10$ se trouvant dans l'intervalle $[0,5]$ à l'aide de plusieurs méthodes algorithmiques de recherche de zéro d'une fonction. Puis dans un second temps, de comparer ces différentes méthodes selon plusieurs critères.\\
+
+\noindent Ainsi, nous avons construit et implémenté des algorithmes sous \href{https://www.mathworks.com/products/matlab.html}{MATLAB} et \href{https://octave.org/}{Octave} à partir des méthodes suivantes :
+\begin{itemize}
+    \item \hyperref[ref:dichotomie]{Méthode de la dichotomie}
+    \item \hyperref[ref:trichotomie]{Méthode de la trichotomie}
+    \item \hyperref[ref:pt-fixe]{Méthode du point fixe}
+    \item \hyperref[ref:newton]{Méthode de Newton}
+    \item \hyperref[ref:sécante]{Méthode de la sécante}
+    \item \hyperref[ref:fausse-position]{Méthode de la fausse position}\\
+\end{itemize}
+\noindent Ces méthodes permettent toutes d'approcher le zéro d'une fonction, avec toutefois des performances différentes. Afin de les comparer, nous nous baserons sur 3 critères principaux : le \textbf{nombre d'itérations} requises pour approcher le zéro, la \textbf{vitesse moyenne} d'exécution de l'algorithme et \textbf{l'erreur} de l'approximation.\\
+
+\noindent Rechercher la racine d'une fonction polynomiale revient à résoudre une équation non linéaire. Ainsi, les algorithmes présentés dans ce compte rendu de TP fonctionneront pour la recherche de zéro de toute fonction non linéaire.\\ 
+
+\noindent L'intérêt principal des méthodes algorithmiques de recherche de zéro est d'offrir une approximation rapide et précise des racines d'une fonction dont il n'existe pas de solution analytique connue.\\
+
+\noindent Les algorithmes présentés sont cependant dépendants de plusieurs facteurs. Tout d'abord, leur efficacité dépend fortement des conditions initiales. Dans ce TP, nous sélectionnerons les conditions initiales de manière à optimiser la convergence des algorithmes, choix que nous détaillerons pour chaque méthode. De plus, la vitesse d'exécution est dépendante – certes faiblement – des capacités de la machine sur laquelle sont effectués les tests. De ce fait, afin de comparer de façon significative les méthodes, tous les tests de vitesse présentés dans ce compte rendu ont été effectués sur la même machine.
+
+
+% Méthodes et matériel ---------------------------------------------------
+\newpage
+\section{Méthodes et matériels}
+\noindent Dans cette section, nous présenterons les méthodes étudiées et leur mise en oeuvre sous forme d'algorithme en pseudo-code. Vous retrouverez les fonctions codées en langage \href{https://www.mathworks.com/products/matlab.html}{MATLAB} dans le fichier .zip fourni avec ce compte-rendu, ou bien en suivant \href{https://github.com/taupz/tp_matlab}{\underline{ce lien}} si vous n'avez pas accès au dossier.\\
+
+\noindent Chaque fonction présentée prend en paramètres les informations nécessaires à la méthode qu'elle implémente et un handle \texttt{fun} représentant la fonction dont on cherche la racine. Cela permet de tester les algoritmes pour différentes fonctions. Elles renverront la valeur approchée du zéro qu'elles ont obtenu, le nombre d'itérations nécessaires pour l'atteindre et l'erreur par rapport au zéro réel de fonction (calculé soit à la main, soit avec \texttt{roots}, une méthode native de matlab renvoyant les racines d'un polynôme). \\
+\noindent Afin de les étudier, nous récupérerons les informations (valeur approchée, nombre d'itérations, erreur relative et temps d'exécution moyen sur 100 exécutions) de chaque méthode de la façon suivante (codée en MATLAB) :\\
+
+\begin{lstlisting}[caption={Récupération des données d'une méthode}]
+[dichotomic_value, nbIterDichotomie, errDichotomie] = dichotomic_func(fun , 0, 5, 10^-3, 100, trueValue);
+
+total_time = 0;
+for i = 1:100
+    t_start = clock;
+    dichotomic_func(fun, 0, 5, 10^-3, 100, trueValue);
+    t_end = clock;
+    exec_time = etime(t_end, t_start);
+    total_time = total_time + exec_time;
+end
+averageTimeDichotomie = total_time/100;
+
+disp(['Zero approche par dichotomie : ' num2str(dichotomic_value)]);
+disp(['Erreur  : ' num2str(errDichotomie)]);
+disp(['Nombre d iterations : ' num2str(nbIterDichotomie)]);
+disp(['Temps moyen sur 100 executions : ' num2str(averageTimeDichotomie) 's' char(10)]);
+\end{lstlisting}
+Il est à noter que par souci de simplicité, nous considérerons que toutes les fonctions étudiées admettent un zéro.\\
+Une fois ces données récupérées, nous pourrons les comparer et les analyser (cf. \hyperref[ref:resultats]{Résultats} et \hyperref[ref:discussions]{Discussions}).\\
+
+
+% ===== Dichotomie =====
+\subsection{Méthode de la dichotomie}
+\label{ref:dichotomie}
+\noindent La méthode de la dichotomie est un algorithme de recherche d'un zéro d'une fonction. Elle implique de diviser successivement un intervalle en deux sous-intervalles et en conservant le sous-intervalle contenant la racine de la fonction. Après un certain nombre de division, l'algorithme converge vers le zéro exacte de la fonction.\\
+Pour implémenter notre algorithme, nous considérerons une fonction $f$ continue sur $[a,b]$ telle que $f(a)$ et $f(b)$ sont de signe opposés et non nuls. D'après le théorème des valeurs intermédiaires, il existe un point $c$ tel que $f(x) = 0$, qui correspond à notre racine. À chaque itération, nous allons considérer le milieu $c$ de l'intervalle $[a,b]$ comme une approximation du zéro de la fonction, puis déterminer si le zéro est dans $[a,c]$ ou dans $[c,b]$ pour réitérer la recherche dans ce nouvel intervalle contenant le zéro.\\
+Ainsi, on peut écrire l'algorithme de dichotomie selon ce pseudo-code :
+\begin{verbatim}
+Entrée : fun, a, b, tol, iterMax, trueValue
+Sortie: approximation de la racine, nombre d'itérations, erreur relative
+Step 1 : i ← 1
+Step 2 : TANT QUE i < iterMax ET |b - a| > tol FAIRE
+Step 3 :    i ← i + 1
+Step 4 :    c ← (a + b)/2
+Step 5 :    fc ← fun(c)
+Step 6 :    SI fc = 0
+Step 7 :        BREAK
+Step 8 :    FIN SI
+Step 9 :    SI fun(a) * fc < 0
+Step 10 :       b ← c
+Step 11 :   SINON
+Step 12 :       a ← c
+Step 13 :   FIN SI
+Step 14 : FIN TANT QUE
+Step 15 : xfinal ← c
+Step 16 : err ← |xfinal - trueValue|
+\end{verbatim}
+
+\noindent Après avoir utilisé cet algorithme pour trouver le zéro (connu comme étant environ $1,36523$) de la fonction $f(x) = x^3 + 4x^2 -10$, sur l'intervalle $[0,5]$ avec pour tolérance $10^-3$ et en limitant les itérations à $100$, nous obtenons :
+\begin{itemize}
+    \item Approximation de la racine : $1,3654$
+    \item Nombre d'itérations : $13$
+    \item Puissance de l'erreur : $10^-4$
+    \item Temps moyen d'exécution (sur 100 exécutions) : $0,324$ ms
+\end{itemize}
+Nous pouvons donc en conclure que l'algorithme converge bien vers une approximation de la racine de $f$.
+
+% ===== Trichotomie =====
+\subsection{Méthode de la trichotomie}
+\label{ref:trichotomie}
+\noindent La méthode de la trichotomie utilise un fonctionnement similaire à celui de la dichotomie. En effet, au lieu de diviser l'intervalle par 2, elle implique un division en 3 sous-intervalles. De la même façon que pour la dichotomie, on choisit parmi ces trois sous-intervalles celui qui contient le zéro et on réitère la méthode, jusqu'à converger vers le zéro réel de la fonction.\\
+Ainsi, on peut écrire l'algorithme de trichotomie selon ce pseudo-code :
+\begin{verbatim}
+Entrée : fun, a, b, tol, iterMax, trueValue
+Sortie: approximation de la racine, nombre d'itérations, erreur relative
+Step 1 : i ← 1
+Step 2 : TANT QUE i < iterMax ET |b - a| > tol FAIRE
+Step 3 :    i ← i + 1
+Step 4 :    c1 ← (a + b)/3
+Step 5 :    c2 ← 2*(a + b)/3
+Step 6 :    fc1 ← fun(c1)
+Step 7 :    fc2 ← fun(c2)
+Step 8 :    SI fc1 = 0
+Step 9 :        xfinal ← c1
+Step 10 :       err = 0
+Step 11 :       EXIT
+Step 12 :   SINON SI fc2 = 0
+Step 13 :       xfinal ← c2
+Step 14 :       err = 0
+Step 15 :       EXIT
+Step 16 :   FIN SI
+Step 17 :   SI fun(a) * fc1 < 0
+Step 18 :       b ← c1
+Step 19 :   SINON SI fun(a) * fc2 < 0
+Step 20 :       a ← c1
+Step 21 :       b ← c2
+Step 22 :   SINON
+Step 23 :       a ← c2
+Step 24 :   FIN SI
+Step 25 : FIN TANT QUE
+Step 26 : xfinal ← (a + b)/2
+Step 27 : err ← |xfinal - trueValue|
+\end{verbatim}
+\noindent Après avoir utilisé cet algorithme pour trouver le zéro (connu comme étant environ $1,36523$) de la fonction $f(x) = x^3 + 4x^2 -10$, sur l'intervalle $[0,5]$ avec pour tolérance $10^-3$ et en limitant les itérations à $100$, nous obtenons :
+\begin{itemize}
+    \item Approximation de la racine : $1,3653$
+    \item Nombre d'itérations : $8$
+    \item Puissance de l'erreur : $10^-5$
+    \item Temps moyen d'exécution (sur 100 exécutions) : $0,285$ ms
+\end{itemize}
+Nous pouvons donc en conclure que l'algorithme converge bien vers une approximation de la racine de $f$.
+
+
+% ===== Point fixe =====
+\subsection{Méthode du point fixe}
+\label{ref:pt-fixe}
+\noindent La méthode du point fixe repose sur la notion de point fixe. Soit $f$ une application d'un ensemble $E$ dans lui-même, on dit qu'un élément $x$ de $E$ est un point fixe de $f$ si $f(x) = x$.\\
+Nous utiliserons la méthode du point fixe pour calculer une approximation de la racine d'une fonction $f$ donnée. Toutefois, pour assurer la convergence de l'algorithme, il est nécessaire que la fonction étudiée respecte des conditions :
+\begin{itemize}
+    \item \underline{D'existence :} Si $g$ est une fonction continue sur $[a,b]$ et si $g(x)\in[a,b]$, alors $g$ possède au moins un point fixe dans $[a,b]$.
+    \item \underline{D'unicité :} Si en outre $g$ est dérivable sur $[a,b]$ et s'il existe une constante $K\in[0,1[$ telle que $|g'(x)|\leq K$ pour tout $x\in[a,b]$, alors ce point fixe de $[a,b]$ est unique.
+\end{itemize}
+Nous choisirons donc des fonctions pouvant être utilisées dans l'algorithme du point fixe telles que :
+\begin{multicols}{2}
+\begin{itemize}
+    \item[$\bullet$] $f_1(x)=x^2-x-2$
+    \item[$\bullet$] $f_2(x)=x^4+2x^2-x-3$
+    \item[$\bullet$] $f_3(x)=6x^3-x- 1$
+    \item[$\bullet$] $f_4(x)=3x^5+x^2-2x$
+\end{itemize}
+\end{multicols}
+\noindent Pour résoudre l'équation $f(x)=0$, on fait intervenir une fonction $g$ telle que si $p$ est la solution de l'équation $f(x)=0$, alors $g(p) = p$, puis nous déterminerons le point fixe de cette fonction $g$.\\
+Pour cela, si $g$ vérifie bien les conditions énoncées précédemment, on considère la suite $u_n+1=g(u_n)$. Si $(u_n)$ converge vers un élément $l$ , alors $l$ est un point fixe de $g$. Nous utiliserons cette propriété pour déterminer le point fixe de $g$, et par extension, la racine de $f$\\
+Par exemple, associons une fonction $g_n$ à chaque fonction $f_n$ listé précédemment telle que $f_n(p)=0 \iff g_n(p)=p$ :
+\begin{multicols}{2}
+\begin{itemize}
+    \item[$\bullet$] $g_1(x)=(2 + 2x)^{1/2}$
+    \item[$\bullet$] $g_2(x)=(3 + x - 2x^2)^{1/4}$
+    \item[$\bullet$] $g_3(x)=(\frac{1}{6}   + \frac{1}{6}x)^{1/3}$
+    \item[$\bullet$] $g_4(x)=(-\frac{1}{3}x+\frac{2}{3}x)^{1/5}$
+\end{itemize}
+\end{multicols}
+\noindent Avec toutes ces informations, on peut écrire l'algorithme du point fixe selon ce pseudo-code en prenant \texttt{fun} la fonction dont on cherche le point fixe :
+\begin{verbatim}
+Entrée : fun, p0, tol, iterMax, trueValue
+Sortie: approximation de la racine, nombre d'itérations, erreur relative
+Step 1 : i ← 1
+Step 2 : x ← p0
+Step 3 : TANT QUE i < iterMax FAIRE
+Step 4 :    newX ← fun(x)
+Step 5 :    SI |newX - x| < tol
+Step 6 :        BREAK
+Step 7 :    FIN SI
+Step 8 :    i ← i + 1
+Step 9 :    x ← newX
+Step 10 : FIN TANT QUE
+Step 11 : xfinal ← x
+Step 12 : err ← |xfinal - trueValue|
+\end{verbatim}
+\noindent Pour vérifier l'algorithme, on le lance en cherchant la racine de $f_4$, donc le point fixe de $g_4$ (connu comme étant environ $0,79594$) de la fonction $f(x) = x^3 + 4x^2 -10$, avec $p0 = 1$ avec pour tolérance $10^-3$ et en limitant les itérations à $100$, nous obtenons :
+\begin{itemize}
+    \item Approximation de la racine : $0,79597$
+    \item Nombre d'itérations : $3$
+    \item Puissance de l'erreur : $10^-5$
+    \item Temps moyen d'exécution (sur 100 exécutions) : $0,150$ ms
+\end{itemize}
+Nous pouvons donc en conclure que l'algorithme converge bien vers une approximation de la racine de $f$.
+
+
+% ===== Newton =====
+\subsection{Méthode de Newton}
+\label{ref:newton}
+
+
+% ===== Sécante =====
+\subsection{Méthode de la sécante}
+\label{ref:sécante}
+
+
+% ===== Fausse pos =====
+\subsection{Méthode de la fausse position}
+\label{ref:fausse-position}
+
+
+
+% Résultats ---------------------------------------------------
+\section{Résultats}
+\label{ref:resultats}
+
+
+% Discussions ---------------------------------------------------
+\section{Discussions}
+\label{ref:discussions}
+
+
+% Conclusion ---------------------------------------------------
+\section{Conclusion}
+
+
+
+% Page X Références -------------------------------------------------------
+\section{Références}
+\label{ref:Références}
+
+\end{document}
